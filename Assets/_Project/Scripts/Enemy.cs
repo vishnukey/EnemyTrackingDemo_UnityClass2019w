@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿//#define DEDBUG
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Enemy : MonoBehaviour {
 
@@ -11,14 +14,17 @@ public class Enemy : MonoBehaviour {
 	[SerializeField] float strength = 0;
 	[SerializeField] float speed = 1;
 	[SerializeField] float minDistance = 1f;
+	[SerializeField] float health = 100;
+	[Tooltip("Attack Cooldown Time in seconds")] [SerializeField] float attackCooldown = 1;
+	[SerializeField] TextMeshProUGUI healthBar;
 
 	Transform target = null;
+	float lastAttackTime = 0;
 
 	bool canSeeTarget(Transform target, LayerMask mask){
 		Vector3 dirToTarget = (target.position - transform.position).normalized;
 		if (Vector3.Angle (transform.forward, dirToTarget) < fieldOfView / 2) {
 			float dstToTarget = Vector3.Distance (transform.position, target.position);
-
 			if (dstToTarget < viewDistance &&
 				!Physics.Raycast (transform.position, dirToTarget, dstToTarget, ~searchMask)) {
 				return true;
@@ -45,11 +51,13 @@ public class Enemy : MonoBehaviour {
 			Player player = target.GetComponent<Player>();
 			if (player != null){
 				player.TakeDamage(strength);
-				Debug.Log("Attacking Player with strength: " + strength);
-			}else{
-				Debug.Log("Could not get player component");
+				lastAttackTime = Time.time;
 			}
 		}
+	}
+
+	public void TakeDamage(float strength){
+		health -= strength;
 	}
 
 	public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal) {
@@ -61,6 +69,9 @@ public class Enemy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (health <= 0) Destroy(gameObject);
+		healthBar.text = health.ToString();
+
 		// Make sure we have a target
 		if (target == null){
 			Transform tryFindTarget = findTarget();
@@ -82,7 +93,7 @@ public class Enemy : MonoBehaviour {
 			return;
 		}
 
-		// Make sure we can still see the target
+		// Make sure w#endife can still see the target
 		if (!canSeeTarget(target, searchMask)){
 			target = null;
 			return;
@@ -91,7 +102,7 @@ public class Enemy : MonoBehaviour {
 		float distToTarget = Vector3.Distance(transform.position, target.position);
 
 		// Attack if we're close enough
-		if (distToTarget < attackDistance){
+		if (distToTarget < attackDistance && Time.time - lastAttackTime > attackCooldown){
 			Attack(target);
 		}
 
@@ -100,6 +111,17 @@ public class Enemy : MonoBehaviour {
 		transform.LookAt(target.position);
 		if (distToTarget > minDistance)
 			transform.position += transform.forward * speed * Time.deltaTime;
-
 	}
+
+#if DEBUG
+	void OnGUI()
+    {
+
+        Vector2 targetPos;
+		targetPos = Camera.main.WorldToScreenPoint (transform.position);
+		
+		GUI.Box(new Rect(targetPos.x, Screen.height - targetPos.y, 60, 20), health.ToString());
+
+    }
+#endif
 }
