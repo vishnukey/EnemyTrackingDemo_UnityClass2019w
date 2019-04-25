@@ -8,9 +8,16 @@ public class Player : MonoBehaviour {
 	[SerializeField] float strength = 10;
 	[SerializeField] float hitReach = 1;
 
+	[SerializeField] int inventoryWidth;
+	[SerializeField] int inventoryHeight;
+
+	[SerializeField] InventoryUIManager inventoryUI;
+
+	public Item[,] inventory;
+
 	// Use this for initialization
-	void Start () {
-		
+	void Awake () {
+		inventory = new Item[inventoryWidth, inventoryHeight];
 	}
 	
 	// Update is called once per frame
@@ -24,6 +31,13 @@ public class Player : MonoBehaviour {
 					Attack(hit.collider.transform);
 				}
 			}
+		}
+
+		if (Input.GetKeyDown("i")){
+			inventoryUI.ShowInventory();
+		}
+		if (Input.GetKeyDown("o")){
+			inventoryUI.HideInventory();
 		}
 	}
 

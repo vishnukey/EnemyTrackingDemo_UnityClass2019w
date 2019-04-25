@@ -1,6 +1,4 @@
-﻿//#define DEDBUG
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -113,8 +111,7 @@ public class Enemy : MonoBehaviour {
 			transform.position += transform.forward * speed * Time.deltaTime;
 	}
 
-#if DEBUG
-	void OnGUI()
+	/*void OnGUI()
     {
 
         Vector2 targetPos;
@@ -122,6 +119,5 @@ public class Enemy : MonoBehaviour {
 		
 		GUI.Box(new Rect(targetPos.x, Screen.height - targetPos.y, 60, 20), health.ToString());
 
-    }
-#endif
+    }*/
 }
