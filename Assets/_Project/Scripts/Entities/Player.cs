@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
 	public float hitReach = 1;
 
 	public Item[,] inventory;
-	Index2D equipedItem = null;
+	public Index2D equipedItem = null;
 
 	public List<Item> forTestingPurposesONLY;
 	Camera camera;
