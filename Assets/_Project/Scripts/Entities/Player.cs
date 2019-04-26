@@ -8,16 +8,18 @@ public class Player : MonoBehaviour {
 	[SerializeField] float strength = 10;
 	[SerializeField] float hitReach = 1;
 
-	[SerializeField] int inventoryWidth;
-	[SerializeField] int inventoryHeight;
-
-	[SerializeField] InventoryUIManager inventoryUI;
-
 	public Item[,] inventory;
 
+	public List<Item> forTestingPurposesONLY;
+
 	// Use this for initialization
-	void Awake () {
-		inventory = new Item[inventoryWidth, inventoryHeight];
+	void Start () {
+		inventory = InventoryUIManager.instance.MakeInventory();
+		inventory[0, 0] = forTestingPurposesONLY[0];
+		inventory[1, 1] = forTestingPurposesONLY[1];
+		inventory[2, 1] = forTestingPurposesONLY[1];
+		inventory[3, 1] = forTestingPurposesONLY[1];
+		inventory[3, 0] = forTestingPurposesONLY[1];
 	}
 	
 	// Update is called once per frame
@@ -34,10 +36,10 @@ public class Player : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown("i")){
-			inventoryUI.ShowInventory();
+			InventoryUIManager.instance.ShowInventory(inventory);
 		}
 		if (Input.GetKeyDown("o")){
-			inventoryUI.HideInventory();
+			InventoryUIManager.instance.HideInventory();
 		}
 	}
 
