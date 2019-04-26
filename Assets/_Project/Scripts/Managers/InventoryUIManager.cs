@@ -15,12 +15,12 @@ public class InventoryUIManager : MonoBehaviour {
 	#region DescriptionPane
 		[SerializeField] List<Button> buttons;
 		[SerializeField] Image icon;
-		[SerializeField] TextMeshProUGUI name;
-		[SerializeField] TextMeshProUGUI description;
+		[SerializeField] TextMeshProUGUI itemName;
+		[SerializeField] TextMeshProUGUI itemDescription;
 	#endregion
 
 	Image[,] inventorySlots;
-	bool shown = false;
+	[HideInInspector] public bool shown = false;
 	Item[,] activeInventory = null;
 
 	public static InventoryUIManager instance;
@@ -66,13 +66,25 @@ public class InventoryUIManager : MonoBehaviour {
 	void Display(int i, int j){
 		Item item = activeInventory[i, j];
 		if (item != null){
+			foreach (Button b in buttons) b.onClick.RemoveAllListeners();
+
 			icon.sprite = item.graphic;
-			description.text = item.itemDescription;
-			name.text = item.itemName;
+			itemDescription.text = item.itemDescription;
+			itemName.text = item.itemName;
+
+			buttons[0].onClick.AddListener(() => player.Use(i, j));
+			buttons[0].transform.GetChild(0).GetComponent<Text>().text = "Use";
+
+			buttons[1].onClick.AddListener(() => player.Equip(i, j));
+			buttons[1].transform.GetChild(0).GetComponent<Text>().text = "Equip";
+
 		}else{
+			foreach (Button b in buttons) b.onClick.RemoveAllListeners();
 			icon.sprite = defaultImage;
-			description.text = "";
-			name.text = "";
+			itemDescription.text = "";
+			itemName.text = "";
+			buttons[0].transform.GetChild(0).GetComponent<Text>().text = "";
+			buttons[1].transform.GetChild(0).GetComponent<Text>().text = "";
 		}
 	}
 	
@@ -108,7 +120,7 @@ public class InventoryUIManager : MonoBehaviour {
     	Cursor.visible = false;
 		activeInventory = null;
 		icon.sprite = defaultImage;
-		description.text = "";
-		name.text = "";
+		itemDescription.text = "";
+		itemName.text = "";
 	}
 }

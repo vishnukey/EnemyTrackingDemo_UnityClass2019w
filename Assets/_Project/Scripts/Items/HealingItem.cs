@@ -6,8 +6,9 @@ using UnityEngine;
 public class HealingItem : Item {
 	public float recoveryAmount;
 
-	public void Use(Player player)
+	public override bool Use(Player player)
 	{
 		player.health += recoveryAmount;
+		return true;
 	}
 }

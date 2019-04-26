@@ -2475,10 +2475,14 @@ MonoBehaviour:
   - {fileID: 413871167}
   - {fileID: 486551114}
   defaultImage: {fileID: 21300000, guid: 430580dbc5c654d43b237a2e14188a8b, type: 3}
-  buttons: []
+  buttons:
+  - {fileID: 1073808105}
+  - {fileID: 861955268}
+  - {fileID: 1781012546}
   icon: {fileID: 1686353184}
-  name: {fileID: 2125815127}
-  description: {fileID: 1040073818}
+  itemName: {fileID: 2125815127}
+  itemDescription: {fileID: 1040073818}
+  shown: 0
   inventoryWidth: 15
   inventoryHeight: 3
 --- !u!1 &2125815125
