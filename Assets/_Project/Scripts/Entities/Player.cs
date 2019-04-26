@@ -12,15 +12,17 @@ public class Player : MonoBehaviour {
 	Index2D equipedItem = null;
 
 	public List<Item> forTestingPurposesONLY;
+	Camera camera;
 
 	// Use this for initialization
 	void Start () {
 		inventory = InventoryUIManager.instance.MakeInventory();
-		inventory[0, 0] = forTestingPurposesONLY[0];
-		inventory[1, 1] = forTestingPurposesONLY[1];
-		inventory[2, 1] = forTestingPurposesONLY[1];
-		inventory[3, 1] = forTestingPurposesONLY[1];
-		inventory[3, 0] = forTestingPurposesONLY[1];
+		// inventory[0, 0] = forTestingPurposesONLY[0];
+		// inventory[1, 1] = forTestingPurposesONLY[1];
+		// inventory[2, 1] = forTestingPurposesONLY[1];
+		// inventory[3, 1] = forTestingPurposesONLY[1];
+		// inventory[3, 0] = forTestingPurposesONLY[1];
+		camera = Camera.main;
 	}
 	
 	// Update is called once per frame
@@ -30,7 +32,7 @@ public class Player : MonoBehaviour {
 		if (Input.GetMouseButtonDown(0)){
 			if (equipedItem == null){
 				RaycastHit hit;
-				if (Physics.Raycast(transform.position, -transform.right, out hit, hitReach)){
+				if (Physics.Raycast(transform.position, camera.transform.forward, out hit, hitReach)){
 					if (hit.collider.CompareTag("Enemy")){
 						Enemy enemy = hit.collider.GetComponent<Enemy>();
 						if (enemy != null){
@@ -54,7 +56,17 @@ public class Player : MonoBehaviour {
 			if (InventoryUIManager.instance.shown)
 				InventoryUIManager.instance.HideInventory();
 			else
-				InventoryUIManager.instance.ShowInventory(inventory);
+				InventoryUIManager.instance.ShowInventory(inventory, true);
+		}
+
+		if (Input.GetKeyDown("e")){
+			RaycastHit hit;
+			if (Physics.Raycast(transform.position, camera.transform.forward, out hit, hitReach)){
+				if (hit.collider.CompareTag("Interactable")){
+					Interactable thing = hit.collider.GetComponent<Interactable>();
+					if (thing != null) thing.Interact();
+				}
+			}
 		}
 	}
 
@@ -75,8 +87,29 @@ public class Player : MonoBehaviour {
 		equipedItem = new Index2D{i=i, j=j};
 	}
 
+	public void Take(Item item)
+	{
+		for (int i = 0; i < inventory.GetLength(0); i++){
+			for (int j = 0; j < inventory.GetLength(1); j++){
+				if (inventory[i, j] != null) continue;
+				inventory[i, j] = item;
+				goto done;
+			}
+		}
+
+		done:
+			return;
+	}
+
+	public void Drop(int i, int j)
+	{
+		inventory[i, j] = null;
+	}
+
 	public class Index2D
 	{
 		public int i, j;
 	}
+
+	
 }

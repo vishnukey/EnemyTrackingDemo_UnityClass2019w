@@ -21,6 +21,7 @@ public class InventoryUIManager : MonoBehaviour {
 
 	Image[,] inventorySlots;
 	[HideInInspector] public bool shown = false;
+	bool hasPlayerInventory = false;
 	Item[,] activeInventory = null;
 
 	public static InventoryUIManager instance;
@@ -40,6 +41,13 @@ public class InventoryUIManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		icon.sprite = defaultImage;
+		itemDescription.text = "";
+		itemName.text = "";
+		foreach (Button b in buttons) {
+			b.onClick.RemoveAllListeners();
+			b.transform.GetChild(0).GetComponent<Text>().text = "";
+		}
+
 		inventorySlots = new Image[inventoryWidth, inventoryHeight];
 		RectTransform panelTransform = inventoryPanel.GetComponent<RectTransform>();
 		float HEIGHT = Screen.height + panelTransform.sizeDelta.y - 150f;
@@ -72,19 +80,31 @@ public class InventoryUIManager : MonoBehaviour {
 			itemDescription.text = item.itemDescription;
 			itemName.text = item.itemName;
 
-			buttons[0].onClick.AddListener(() => player.Use(i, j));
-			buttons[0].transform.GetChild(0).GetComponent<Text>().text = "Use";
+			if (!hasPlayerInventory){
+				buttons[0].onClick.AddListener(() => {
+					player.Take(item);
+					activeInventory[i, j] = null;
+				});
+				buttons[0].transform.GetChild(0).GetComponent<Text>().text = "Take";
+			}else{
+				buttons[0].onClick.AddListener(() => player.Use(i, j));
+				buttons[0].transform.GetChild(0).GetComponent<Text>().text = "Use";
 
-			buttons[1].onClick.AddListener(() => player.Equip(i, j));
-			buttons[1].transform.GetChild(0).GetComponent<Text>().text = "Equip";
+				buttons[1].onClick.AddListener(() => player.Equip(i, j));
+				buttons[1].transform.GetChild(0).GetComponent<Text>().text = "Equip";
+
+				buttons[2].onClick.AddListener(() => player.Drop(i, j));
+				buttons[2].transform.GetChild(0).GetComponent<Text>().text = "Drop";
+			}
 
 		}else{
-			foreach (Button b in buttons) b.onClick.RemoveAllListeners();
+			foreach (Button b in buttons) {
+				b.onClick.RemoveAllListeners();
+				b.transform.GetChild(0).GetComponent<Text>().text = "";
+			}
 			icon.sprite = defaultImage;
 			itemDescription.text = "";
 			itemName.text = "";
-			buttons[0].transform.GetChild(0).GetComponent<Text>().text = "";
-			buttons[1].transform.GetChild(0).GetComponent<Text>().text = "";
 		}
 	}
 	
@@ -93,7 +113,7 @@ public class InventoryUIManager : MonoBehaviour {
 		if (activeInventory != null){
 			for (int i = 0; i < inventoryWidth; i++){
 				for (int j = 0; j < inventoryHeight; j++){
-					if (player.inventory[i, j] != null){
+					if (activeInventory[i, j] != null){
 						inventorySlots[i, j].sprite = activeInventory[i, j].graphic;
 					} else{
 						inventorySlots[i, j].sprite = defaultImage;
@@ -103,13 +123,14 @@ public class InventoryUIManager : MonoBehaviour {
 		}
 	}
 
-	public void ShowInventory(Item[,] inventory){
+	public void ShowInventory(Item[,] inventory, bool isPlayer = false){
 		foreach (MonoBehaviour component in toDisable) component.enabled = false;
 		inventoryPanel.gameObject.SetActive(true);
 		shown = true;
 		Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 		activeInventory = inventory;
+		hasPlayerInventory = isPlayer;
 	}
 
 	public void HideInventory(){
