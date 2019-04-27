@@ -9,7 +9,8 @@ public class InventoryUIManager : MonoBehaviour {
 	[SerializeField] Player player;
 	[SerializeField] Transform inventoryPanel;
 	[SerializeField] GameObject inventorySlotPrefab;
-	[SerializeField] List<MonoBehaviour> toDisable;
+	[SerializeField] List<MonoBehaviour> toDisableCmps;
+	[SerializeField] List<GameObject> toDisableTrans;
 	[SerializeField] Sprite defaultImage;
 
 	#region DescriptionPane
@@ -124,7 +125,8 @@ public class InventoryUIManager : MonoBehaviour {
 	}
 
 	public void ShowInventory(Item[,] inventory, bool isPlayer = false){
-		foreach (MonoBehaviour component in toDisable) component.enabled = false;
+		foreach (MonoBehaviour component in toDisableCmps) component.enabled = false;
+		foreach (GameObject go in toDisableTrans) go.SetActive(false);
 		inventoryPanel.gameObject.SetActive(true);
 		shown = true;
 		Cursor.lockState = CursorLockMode.None;
@@ -134,7 +136,8 @@ public class InventoryUIManager : MonoBehaviour {
 	}
 
 	public void HideInventory(){
-		foreach (MonoBehaviour component in toDisable) component.enabled = true;
+		foreach (MonoBehaviour component in toDisableCmps) component.enabled = true;
+		foreach (GameObject go in toDisableTrans) go.SetActive(true);
 		inventoryPanel.gameObject.SetActive(false);
 		shown = false;
 		Cursor.lockState = CursorLockMode.Locked;
