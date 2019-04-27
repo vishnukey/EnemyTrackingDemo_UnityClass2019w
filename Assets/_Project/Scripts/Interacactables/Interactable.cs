@@ -5,20 +5,26 @@ using UnityEngine;
 public class Interactable : MonoBehaviour {
 	Item[,] inventory;
 
-	public List<Item> possibleItems;
+	public List<Container> possibleItems;
 
 	void Start()
 	{
 		inventory = InventoryUIManager.instance.MakeInventory();
-		int ENDX = inventory.GetLength(0) - 1;
-		int ENDY = inventory.GetLength(1) - 1;
+		// int ENDX = inventory.GetLength(0) - 1;
+		// int ENDY = inventory.GetLength(1) - 1;
 
-		inventory[0,ENDY] = possibleItems[0];
-		inventory[1,ENDY - 1] = possibleItems[1];
-		inventory[2,ENDY - 1] = possibleItems[1];
-		inventory[3,ENDY - 1] = possibleItems[1];
-		inventory[4,ENDY - 1] = possibleItems[1];
-		inventory[5,ENDY - 1] = possibleItems[1];
+		// inventory[0,ENDY] = possibleItems[0];
+		// inventory[1,ENDY - 1] = possibleItems[1];
+		// inventory[2,ENDY - 1] = possibleItems[1];
+		// inventory[3,ENDY - 1] = possibleItems[1];
+		// inventory[4,ENDY - 1] = possibleItems[1];
+		// inventory[5,ENDY - 1] = possibleItems[1];
+
+		for (int i = 0; i < possibleItems.Count && i < inventory.GetLength(0); i++){
+			for (int j = 0; j < possibleItems[i].contained.Count && j < inventory.GetLength(1); j++){
+				inventory[i, j] = possibleItems[i].contained[j];
+			}
+		}
 		
 	}
 
@@ -26,5 +32,10 @@ public class Interactable : MonoBehaviour {
 	public virtual void Interact()
 	{
 		InventoryUIManager.instance.ShowInventory(inventory);
+	}
+
+	[System.Serializable]
+	public class Container{
+		public List<Item> contained;
 	}
 }

@@ -143,6 +143,10 @@ public class InventoryUIManager : MonoBehaviour {
 		Cursor.lockState = CursorLockMode.Locked;
     	Cursor.visible = false;
 		activeInventory = null;
+		foreach (Button b in buttons) {
+				b.onClick.RemoveAllListeners();
+				b.transform.GetChild(0).GetComponent<Text>().text = "";
+		}
 		icon.sprite = defaultImage;
 		itemDescription.text = "";
 		itemName.text = "";
