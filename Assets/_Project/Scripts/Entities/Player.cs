@@ -11,17 +11,11 @@ public class Player : MonoBehaviour {
 	public Item[,] inventory;
 	public Index2D equipedItem = null;
 
-	public List<Item> forTestingPurposesONLY;
 	Camera camera;
 
 	// Use this for initialization
 	void Start () {
 		inventory = InventoryUIManager.instance.MakeInventory();
-		// inventory[0, 0] = forTestingPurposesONLY[0];
-		// inventory[1, 1] = forTestingPurposesONLY[1];
-		// inventory[2, 1] = forTestingPurposesONLY[1];
-		// inventory[3, 1] = forTestingPurposesONLY[1];
-		// inventory[3, 0] = forTestingPurposesONLY[1];
 		camera = Camera.main;
 	}
 	
