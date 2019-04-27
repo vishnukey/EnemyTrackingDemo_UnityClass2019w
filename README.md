@@ -1,4 +1,17 @@
 # Enemy Tracking Demo
 
-A simple project for to demonstrate the ideas of an enemy that searches for the player, attacks when close enough, and the
-player can attack back
+## TODO
+- [x] Enemy Behavious
+        - [x] Tracking
+        - [x] Follows You
+        - [x] Attack You
+        - [] Searches for Player
+- [x] Have Health
+- [x] Change between menus
+- [x] Change between levels
+- [] Hint/tutorial system
+- [x] Respond to specific events (death, collisions, etc)
+- [x] Inventory
+- [x] Interaction system
+- [] Particle System
+
