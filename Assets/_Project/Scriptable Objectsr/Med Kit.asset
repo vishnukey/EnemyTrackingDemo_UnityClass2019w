@@ -13,5 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphic: {fileID: 21300000, guid: 7a9fb816b90754c1d8df731cda83e2e3, type: 3}
   itemName: Med Kit
-  itemDescription: Heals 100 points of damage
-  recoveryAmount: 100
+  itemDescription: Heals 3 points of damage
+  recoveryAmount: 3
